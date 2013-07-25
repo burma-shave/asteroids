@@ -90,8 +90,12 @@
                                      (send frame refresh)]
             [(equal? key-code 'down) (send game-world down)
                                      (send frame refresh)]
-            [(key-code-symbol? key-code) (send msg set-label (string-append "'" (symbol->string (send event get-key-code))))]
-            [else (send msg set-label  (string (send event get-key-code)))]))
+            [(key-code-symbol? key-code) 
+             (send msg set-label 
+                   (string-append "'" 
+                                  (symbol->string (send event get-key-code))))]
+            [else 
+             (send msg set-label  (string (send event get-key-code)))]))
         
     (super-new [paint-callback
                 (lambda (canvas dc)

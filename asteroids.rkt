@@ -64,14 +64,25 @@
     (define (y-thrust-component)
       (* (sin angle) thrust-force))
     
+    (define (wrap-position-to-canvas c)
+      (when (> (pt-x position) (send c get-width)) 
+        (set! position (struct-copy pt position [x 0])))
+      (when (> (pt-y position) (send c get-height))
+        (set! position (struct-copy pt position [y 0])))
+      (when (< (pt-x position) 0)
+        (set! position (struct-copy pt position [x (send c get-width)])))
+      (when (< (pt-y position) 0)
+        (set! position (struct-copy pt position [y (send c get-height)]))))
+    
     (define/public (up)
       (set! position (struct-copy pt position [y (- (pt-y position) 5)])))
     
     (define/public (down)
       (set! position (struct-copy pt position [y (+ (pt-y position) 5)])))
-          
-    (define/public (draw dc)
+                 
+    (define/public (draw canvas dc)
       (update-position)
+      (wrap-position-to-canvas canvas)
       (send path translate (pt-x position) (pt-y position))
       (send dc draw-path path)
       (send path translate (- 0 (pt-x position)) (- 0 (pt-y position))))
@@ -99,7 +110,7 @@
       (send player down))
     
     (define/public (draw canvas dc)      
-      (send player draw dc))
+      (send player draw canvas dc))
           
     (super-new)))
 
